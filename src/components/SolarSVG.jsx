@@ -1,0 +1,148 @@
+export default function SolarSVG() {
+    return (
+        <svg viewBox="0 0 900 768" width="100%" height="auto">
+            {/* Imagen base */}
+            <image href="../../public/solar-system.jpg" width="900" height="768" />
+
+            {/* battery - línea discontinua animada */}
+            <line
+                x1="420"
+                y1="495"
+                x2="400"
+                y2="465"
+                stroke="yellow"
+                strokeWidth="4"
+                strokeDasharray="8,8"
+            >
+                <animate
+                    attributeName="stroke-dashoffset"
+                    values="29;0"
+                    dur="1.2s"
+                    repeatCount="indefinite"
+                />
+                <animate
+                    attributeName="x1"
+                    values="270;270;270"
+                    dur="2s"
+                    repeatCount="indefinite"
+                />
+            </line>
+
+            {/* Panel → inversor - línea discontinua animada */}
+            <line
+                x1="430"
+                y1="200"
+                x2="430"
+                y2="410"
+                stroke="lime"
+                strokeWidth="4"
+                strokeDasharray="8,8"
+            >
+                <animate
+                    attributeName="stroke-dashoffset"
+                    values="29;0"
+                    dur="2s"
+                    repeatCount="indefinite"
+                />
+                <animate
+                    attributeName="y1"
+                    values="300;300;300"
+                    dur="2s"
+                    repeatCount="indefinite"
+                />
+            </line>
+
+            {/* SEN → inversor - línea discontinua animada (30px más abajo) */}
+            <line
+                x1="440"
+                y1="520"
+                x2="440"
+                y2="490"
+                stroke="cyan"
+                strokeWidth="4"
+                strokeDasharray="8,8"
+            >
+                <animate
+                    attributeName="stroke-dashoffset"
+                    values="29;0"
+                    dur="2s"
+                    repeatCount="indefinite"
+                />
+                <animate
+                    attributeName="y1"
+                    values="520;520;520"
+                    dur="2s"
+                    repeatCount="indefinite"
+                />
+            </line>
+            <line
+                x1="440"
+                y1="520"
+                x2="620"
+                y2="585"
+                stroke="cyan"
+                strokeWidth="4"
+                strokeDasharray="8,8"
+            >
+                <animate
+                    attributeName="stroke-dashoffset"
+                    values="0;29"
+                    dur="1.2s"
+                    repeatCount="indefinite"
+                />
+                <animate
+                    attributeName="x2"
+                    values="590;590;590"
+                    dur="2s"
+                    repeatCount="indefinite"
+                />
+            </line>
+            {/* SEN → inversor - línea discontinua animada (30px más abajo) */}
+            <line
+                x1="600"
+                y1="590"
+                x2="700"
+                y2="560"
+                stroke="cyan"
+                strokeWidth="4"
+                strokeDasharray="8,8"
+            >
+                <animate
+                    attributeName="stroke-dashoffset"
+                    values="0;29"
+                    dur="1.2s"
+                    repeatCount="indefinite"
+                />
+                <animate
+                    attributeName="x2"
+                    values="700;700;700"
+                    dur="2s"
+                    repeatCount="indefinite"
+                />
+            </line>
+            {/* INVERSOR → CASA - línea discontinua animada (30px más abajo) */}
+            <line
+                x1="470"
+                y1="445"
+                x2="680"
+                y2="425"
+                stroke="red"
+                strokeWidth="4"
+                strokeDasharray="8,8"
+            >
+                <animate
+                    attributeName="stroke-dashoffset"
+                    values="29;0"
+                    dur="1.2s"
+                    repeatCount="indefinite"
+                />
+                <animate
+                    attributeName="x2"
+                    values="540;540;540"
+                    dur="2s"
+                    repeatCount="indefinite"
+                />
+            </line>
+        </svg>
+    );
+}
