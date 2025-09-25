@@ -9,13 +9,13 @@ import HeroSection from './components/HeroSection';
 
 import FeatureSection from './components/FeatureSection';
 import SolucionesSolaresCompletas from './components/SolucionesSolaresCompletas';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 
 import DisenadorFotovoltaico from './components/DisenadorFotovoltaico';
 
 function App() {
   return (
-    <Router>
+    <>
       <ElectricRaysBackground />
       <CssBaseline />
       <CustomAppBar />
@@ -27,7 +27,7 @@ function App() {
         </>} />
         <Route path="/disenador" element={<DisenadorFotovoltaico />} />
       </Routes>
-    </Router>
+    </>
   );
 }
 

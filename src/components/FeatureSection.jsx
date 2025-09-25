@@ -76,8 +76,14 @@ export default function FeatureSection() {
                         key={card.title}
                         {...card}
                         animationDelay={`${i * 0.15}s`}
-                        onClick={i === 0 ? () => navigate('/disenador') : undefined}
-                        clickable={i === 0}
+                        onClick={
+                            i === 0
+                                ? () => navigate('/disenador')
+                                : i === 1
+                                    ? () => navigate('/clientes')
+                                    : undefined
+                        }
+                        clickable={i === 0 || i === 1}
                     />
                 ))}
             </Box>
