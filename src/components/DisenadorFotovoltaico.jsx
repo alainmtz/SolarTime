@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import GuardarDisenoSolar from './GuardarDisenoSolar';
 import { useEffect } from 'react';
+import { supabase } from '../supabaseClient';
 import TextField from '@mui/material/TextField';
 import IconButton from '@mui/material/IconButton';
 import AddIcon from '@mui/icons-material/Add';
@@ -58,7 +59,7 @@ export default function DisenadorFotovoltaico() {
     // Cargar consumos guardados
     useEffect(() => {
         async function fetchConsumos() {
-            const { data } = await import('../supabaseClient').then(m => m.supabase.from('consumos').select('*'));
+            const { data } = await supabase.from('consumos').select('*');
             setConsumos(data || []);
         }
         fetchConsumos();
