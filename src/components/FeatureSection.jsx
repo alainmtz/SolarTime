@@ -1,6 +1,8 @@
+
 import React from 'react';
 import Box from '@mui/material/Box';
 import FeatureCard from './FeatureCard';
+import { useNavigate } from 'react-router-dom';
 
 const firstRow = [
     {
@@ -57,6 +59,7 @@ const secondRow = [
 ];
 
 export default function FeatureSection() {
+    const navigate = useNavigate();
     return (
         <Box id="featureSection" sx={{ py: 6, px: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', bgcolor: 'transparent', gap: 1 }}>
             <Box
@@ -69,7 +72,13 @@ export default function FeatureSection() {
                 }}
             >
                 {firstRow.map((card, i) => (
-                    <FeatureCard key={card.title} {...card} animationDelay={`${i * 0.15}s`} />
+                    <FeatureCard
+                        key={card.title}
+                        {...card}
+                        animationDelay={`${i * 0.15}s`}
+                        onClick={i === 0 ? () => navigate('/disenador') : undefined}
+                        clickable={i === 0}
+                    />
                 ))}
             </Box>
             <Box

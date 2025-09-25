@@ -2,7 +2,7 @@ import React from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
-export default function FeatureCard({ img, title, desc, imgWidth, animationDelay }) {
+export default function FeatureCard({ img, title, desc, imgWidth, animationDelay, onClick, clickable }) {
     return (
         <Box
             className="feature-card"
@@ -23,7 +23,11 @@ export default function FeatureCard({ img, title, desc, imgWidth, animationDelay
                 animationDelay: animationDelay,
                 borderRadius: '30px',
                 overflow: 'hidden',
+                cursor: clickable ? 'pointer' : 'default',
+                boxShadow: clickable ? '0 0 0 2px #E59CFF' : undefined,
+                transition: 'box-shadow 0.2s',
             }}
+            onClick={clickable ? onClick : undefined}
         >
             <Box sx={{ display: 'block', width: imgWidth, maxWidth: 600, maxHeight: 600, m: 0, position: 'relative' }}>
                 <img

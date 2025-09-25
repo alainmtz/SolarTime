@@ -56,7 +56,7 @@ export default function SolucionesSolaresCompletas() {
             <Box sx={{ width: '100%', maxWidth: 1200, display: 'flex', flexDirection: 'column', alignItems: 'center', bgcolor: 'transparent' }}>
                 <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', bgcolor: 'transparent', borderRadius: 4, mb: 2 }}>
                     <Box sx={{ px: 2, py: 0.5, bgcolor: 'linear-gradient(90deg, rgba(229,156,255,0.24) 0.01%, rgba(186,156,255,0.24) 50.01%, rgba(156,178,255,0.24) 100%)', borderRadius: 4, mb: 2 }}>
-                        <Typography sx={{ fontFamily: 'var(--vId-font-token-a)', fontSize: 14, fontWeight: 500, background: 'linear-gradient(90deg, #E59CFF 0.01%, #BA9CFF 50.01%, #9CB2FF 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', lineHeight: '20px', m: 0 }}>
+                        <Typography sx={{ fontFamily: 'var(--vId-font-token-a)', fontSize: 35, fontWeight: 500, background: 'linear-gradient(90deg, #E59CFF 0.01%, #BA9CFF 50.01%, #9CB2FF 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', lineHeight: '40px', m: 0 }}>
                             Su socio energético
                         </Typography>
                     </Box>
