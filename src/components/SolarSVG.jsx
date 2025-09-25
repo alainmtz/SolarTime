@@ -1,6 +1,6 @@
 export default function SolarSVG() {
     return (
-        <svg viewBox="0 0 900 768" width="100%" height="auto">
+        <svg viewBox="0 0 900 768" width="100%" height="100%">
             {/* Imagen base */}
             <image href="https://solar-time-wcdh.vercel.app/solar-system.jpg" width="900" height="768" />
 

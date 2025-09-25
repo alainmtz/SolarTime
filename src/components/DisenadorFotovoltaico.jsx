@@ -16,9 +16,8 @@ const MODULOS = [
         nombre: 'Paneles Solares',
         imagen: 'https://www.svgrepo.com/show/236459/solar-energy-solar-panel.svg',
         candidatos: [
-            { nombre: 'Panel 450W', imagen: 'https://www.svgrepo.com/show/236459/solar-energy-solar-panel.svg', precio: '230' },
-            { nombre: 'Panel 550W', imagen: 'https://cdn-icons-png.flaticon.com/512/2721/2721304.png', precio: '240' },
-            { nombre: 'Panel 600W', imagen: 'https://cdn-icons-png.flaticon.com/512/2721/2721304.png', precio: '250' },
+            { nombre: 'Panel 580W', imagen: '/paneles/sunevo580.jpg', precio: '240' },
+            { nombre: 'Panel 590W', imagen: '/paneles/panel-jinko-solar-590w.jpg', precio: '250' },
         ],
     },
     {
@@ -45,11 +44,24 @@ const MODULOS = [
     },
 ];
 
+
 export default function DisenadorFotovoltaico() {
     const [anchorEl, setAnchorEl] = useState(null);
     const [moduloSeleccionado, setModuloSeleccionado] = useState(null);
     const [selecciones, setSelecciones] = useState({});
     const [cantidadPaneles, setCantidadPaneles] = useState(1);
+
+    // Calcular suma total de precios seleccionados
+    const total = MODULOS.reduce((acc, modulo, idx) => {
+        const candidatoSeleccionado = selecciones[idx];
+        if (!candidatoSeleccionado) return acc;
+        const candidatoObj = modulo.candidatos.find(c => c.nombre === candidatoSeleccionado);
+        if (!candidatoObj) return acc;
+        let precio = parseFloat(candidatoObj.precio) || 0;
+        // Para paneles solares, multiplicar por cantidad
+        if (idx === 0) precio *= cantidadPaneles;
+        return acc + precio;
+    }, 0);
 
     const handleClick = (event, moduloIdx) => {
         setAnchorEl(event.currentTarget);
@@ -143,6 +155,9 @@ export default function DisenadorFotovoltaico() {
                     );
                 })}
             </Box>
+            <Typography variant="h5" sx={{ mt: 4, color: '#ffe066', fontWeight: 800, textAlign: 'center' }}>
+                Total: ${total.toLocaleString()}
+            </Typography>
             <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
                 {moduloSeleccionado !== null && MODULOS[moduloSeleccionado].candidatos.map((candidato) => (
                     <MenuItem key={candidato.nombre} onClick={() => handleSelect(candidato.nombre)}>
