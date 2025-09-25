@@ -1,4 +1,7 @@
 import React, { useState } from 'react';
+import TextField from '@mui/material/TextField';
+import IconButton from '@mui/material/IconButton';
+import AddIcon from '@mui/icons-material/Add';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Card from '@mui/material/Card';
@@ -13,18 +16,20 @@ const MODULOS = [
         nombre: 'Paneles Solares',
         imagen: 'https://www.svgrepo.com/show/236459/solar-energy-solar-panel.svg',
         candidatos: [
-            { nombre: 'Panel 450W', imagen: 'https://www.svgrepo.com/show/236459/solar-energy-solar-panel.svg', precio: '120' },
-            { nombre: 'Panel 550W', imagen: 'https://cdn-icons-png.flaticon.com/512/2721/2721304.png', precio: '150' },
-            { nombre: 'Panel 600W', imagen: 'https://cdn-icons-png.flaticon.com/512/2721/2721304.png', precio: '180' },
+            { nombre: 'Panel 450W', imagen: 'https://www.svgrepo.com/show/236459/solar-energy-solar-panel.svg', precio: '230' },
+            { nombre: 'Panel 550W', imagen: 'https://cdn-icons-png.flaticon.com/512/2721/2721304.png', precio: '240' },
+            { nombre: 'Panel 600W', imagen: 'https://cdn-icons-png.flaticon.com/512/2721/2721304.png', precio: '250' },
         ],
     },
     {
         nombre: 'Inversores',
         imagen: 'https://www.svgrepo.com/show/235546/renewable-energy-power.svg',
         candidatos: [
-            { nombre: 'Inversor 3kW', imagen: 'https://cdn-icons-png.flaticon.com/512/1041/1041916.png', precio: '400' },
-            { nombre: 'Inversor 5kW', imagen: 'https://cdn-icons-png.flaticon.com/512/1041/1041916.png', precio: '600' },
-            { nombre: 'Inversor 10kW', imagen: 'https://cdn-icons-png.flaticon.com/512/1041/1041916.png', precio: '900' },
+            { nombre: 'Inversor 3.6kW', imagen: '/inversores/inversor3.6kW.jpg', precio: '700' },
+            { nombre: 'Inversor 4kW', imagen: '/inversores/sumry4kw.jpg', precio: '720' },
+            { nombre: 'Inversor 5kW', imagen: '/inversores/ECO-WORTHY5kw.jpg', precio: '1550' },
+            { nombre: 'PowMr Alta Frecuencia 10kW', imagen: '/inversores/powmr10kw.jpg', precio: '2100' },
+            { nombre: 'PowMr Baja Frecuencia 10kW', imagen: '/inversores/powmr10kw.jpg', precio: '2500' },
         ],
     },
     {
@@ -44,6 +49,7 @@ export default function DisenadorFotovoltaico() {
     const [anchorEl, setAnchorEl] = useState(null);
     const [moduloSeleccionado, setModuloSeleccionado] = useState(null);
     const [selecciones, setSelecciones] = useState({});
+    const [cantidadPaneles, setCantidadPaneles] = useState(1);
 
     const handleClick = (event, moduloIdx) => {
         setAnchorEl(event.currentTarget);
@@ -85,9 +91,50 @@ export default function DisenadorFotovoltaico() {
                                     <Typography sx={{ color: '#E59CFF', fontSize: 14, textAlign: 'center', mt: 1 }}>
                                         {candidatoSeleccionado ? `Seleccionado: ${candidatoSeleccionado}` : 'Sin seleccionar'}
                                     </Typography>
+                                    {/* Input de cantidad solo para paneles solares */}
+                                    {idx === 0 && (
+                                        <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', mt: 1, mb: 1 }}>
+                                            <TextField
+                                                label="Cantidad"
+                                                type="number"
+                                                size="small"
+                                                inputProps={{ min: 1 }}
+                                                value={cantidadPaneles}
+                                                onClick={e => e.stopPropagation()}
+                                                onChange={e => setCantidadPaneles(Math.max(1, parseInt(e.target.value) || 1))}
+                                                sx={{
+                                                    width: 90,
+                                                    mr: 1,
+                                                    '& .MuiInputBase-input': { color: '#E59CFF', fontWeight: 700 },
+                                                    '& .MuiInputLabel-root': { color: '#E59CFF' },
+                                                    '& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline': { borderColor: '#E59CFF' },
+                                                    '&:hover .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline': { borderColor: '#BA9CFF' },
+                                                    '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: '#9CB2FF' },
+                                                    '& label.Mui-focused': { color: '#9CB2FF' },
+                                                }}
+                                            />
+                                            <IconButton
+                                                aria-label="sumar"
+                                                onClick={e => { e.stopPropagation(); setCantidadPaneles(cantidadPaneles + 1); }}
+                                                sx={{
+                                                    bgcolor: '#E59CFF',
+                                                    color: '#fff',
+                                                    '&:hover': { bgcolor: '#BA9CFF' },
+                                                    width: 36,
+                                                    height: 36,
+                                                    borderRadius: '50%',
+                                                    ml: 1,
+                                                }}
+                                            >
+                                                <AddIcon />
+                                            </IconButton>
+                                        </Box>
+                                    )}
                                     {precioMostrar && (
                                         <Typography sx={{ color: '#ff0000', fontSize: 18, fontWeight: 800, textAlign: 'center' }}>
-                                            ${precioMostrar}
+                                            {idx === 0 && cantidadPaneles > 1
+                                                ? `$${(parseFloat(precioMostrar) * cantidadPaneles).toLocaleString()}`
+                                                : `$${precioMostrar}`}
                                         </Typography>
                                     )}
                                 </CardContent>
@@ -95,17 +142,17 @@ export default function DisenadorFotovoltaico() {
                         </Card>
                     );
                 })}
-                <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
-                    {moduloSeleccionado !== null && MODULOS[moduloSeleccionado].candidatos.map((candidato) => (
-                        <MenuItem key={candidato.nombre} onClick={() => handleSelect(candidato.nombre)}>
-                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                                <img src={candidato.imagen} alt={candidato.nombre} style={{ width: 32, height: 32, objectFit: 'contain' }} />
-                                <span>{candidato.nombre}</span>
-                            </Box>
-                        </MenuItem>
-                    ))}
-                </Menu>
             </Box>
+            <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
+                {moduloSeleccionado !== null && MODULOS[moduloSeleccionado].candidatos.map((candidato) => (
+                    <MenuItem key={candidato.nombre} onClick={() => handleSelect(candidato.nombre)}>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                            <img src={candidato.imagen} alt={candidato.nombre} style={{ width: 32, height: 32, objectFit: 'contain' }} />
+                            <span>{candidato.nombre}</span>
+                        </Box>
+                    </MenuItem>
+                ))}
+            </Menu>
         </Box>
     );
 }
