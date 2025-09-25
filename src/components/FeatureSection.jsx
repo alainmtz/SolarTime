@@ -13,7 +13,7 @@ const firstRow = [
     },
     {
         img: 'https://assets-v2.codedesign.ai/storage/v1/object/public/68cb0218d968205df284e7c2_e9e4b65d/asset-570b3179',
-        title: 'Soluciones solares',
+        title: 'Registro de clientes y soluciones solares',
         desc: 'Encuentre los productos solares perfectos y el asesoramiento de expertos para sus necesidades.',
         imgWidth: 40,
     },

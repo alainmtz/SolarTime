@@ -90,9 +90,24 @@ export default function ClientesPage() {
                                         Selección de módulos:
                                     </Typography>
                                     <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mb: 1 }}>
-                                        {d.diseno && Object.entries(d.diseno).map(([moduloIdx, nombre]) => (
-                                            <Chip key={moduloIdx} label={String(nombre)} sx={{ bgcolor: '#E59CFF', color: '#181828', fontWeight: 700 }} />
-                                        ))}
+                                        {d.diseno && Object.entries(d.diseno).map(([moduloIdx, nombre]) => {
+                                            // Si es el primer módulo (paneles solares), mostrar cantidad si existe
+                                            if (moduloIdx === '0') {
+                                                const cantidad = d.diseno.cantidadPaneles || d.cantidadPaneles;
+                                                return (
+                                                    <Chip
+                                                        key={moduloIdx}
+                                                        label={cantidad ? `${nombre} (x${cantidad})` : String(nombre)}
+                                                        sx={{ bgcolor: '#E59CFF', color: '#181828', fontWeight: 700 }}
+                                                    />
+                                                );
+                                            }
+                                            // Si es batería, no mostrar número extraño
+                                            if (typeof nombre === 'number') return null;
+                                            return (
+                                                <Chip key={moduloIdx} label={String(nombre)} sx={{ bgcolor: '#E59CFF', color: '#181828', fontWeight: 700 }} />
+                                            );
+                                        })}
                                     </Box>
                                     <Typography variant="caption" sx={{ color: '#aaa', mt: 1 }}>
                                         Guardado: {new Date(d.created_at).toLocaleString()}

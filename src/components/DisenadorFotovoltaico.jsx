@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import GuardarDisenoSolar from './GuardarDisenoSolar';
+import { useEffect } from 'react';
 import TextField from '@mui/material/TextField';
 import IconButton from '@mui/material/IconButton';
 import AddIcon from '@mui/icons-material/Add';
@@ -17,8 +18,8 @@ const MODULOS = [
         nombre: 'Paneles Solares',
         imagen: 'https://www.svgrepo.com/show/236459/solar-energy-solar-panel.svg',
         candidatos: [
-            { nombre: 'Panel 580W', imagen: '/paneles/sunevo580.jpg', precio: '240' },
-            { nombre: 'Panel 590W', imagen: '/paneles/panel-jinko-solar-590w.jpg', precio: '250' },
+            { nombre: 'Panel SunEvo 580W', imagen: '/paneles/sunevo580.jpg', precio: '240' },
+            { nombre: 'Panel Jinko 590W', imagen: '/paneles/panel-jinko-solar-590w.jpg', precio: '250' },
         ],
     },
     {
@@ -51,6 +52,17 @@ export default function DisenadorFotovoltaico() {
     const [moduloSeleccionado, setModuloSeleccionado] = useState(null);
     const [selecciones, setSelecciones] = useState({});
     const [cantidadPaneles, setCantidadPaneles] = useState(1);
+    const [consumos, setConsumos] = useState([]);
+    const [consumoSeleccionado, setConsumoSeleccionado] = useState(null);
+
+    // Cargar consumos guardados
+    useEffect(() => {
+        async function fetchConsumos() {
+            const { data } = await import('../supabaseClient').then(m => m.supabase.from('consumos').select('*'));
+            setConsumos(data || []);
+        }
+        fetchConsumos();
+    }, []);
 
     // Calcular suma total de precios seleccionados
     const total = MODULOS.reduce((acc, modulo, idx) => {
@@ -84,6 +96,55 @@ export default function DisenadorFotovoltaico() {
             <Typography variant="h4" sx={{ mb: 4, fontWeight: 700, color: '#E59CFF' }}>
                 Diseña tu sistema fotovoltaico
             </Typography>
+            {/* Selector de cálculo de consumo guardado */}
+            <Box sx={{ mb: 3, width: '100%', maxWidth: 400 }}>
+                <Typography variant="subtitle1" sx={{ color: '#ffe066', fontWeight: 600, mb: 1 }}>
+                    Selecciona un cálculo de consumo guardado:
+                </Typography>
+                <select
+                    value={consumoSeleccionado ? consumoSeleccionado.id : ''}
+                    onChange={e => {
+                        const found = consumos.find(c => String(c.id) === e.target.value);
+                        setConsumoSeleccionado(found || null);
+                    }}
+                    style={{ width: '100%', padding: 8, fontSize: 16, borderRadius: 6 }}
+                >
+                    <option value="">-- Selecciona un cálculo --</option>
+                    {consumos.map(c => (
+                        <option key={c.id} value={c.id}>
+                            {c.nombre_cliente} ({c.consumo_total} Wh/día)
+                        </option>
+                    ))}
+                </select>
+                {consumoSeleccionado && (
+                    <Box sx={{ mt: 2, bgcolor: '#23234a', borderRadius: 2, p: 2 }}>
+                        <Typography variant="subtitle2" sx={{ color: '#E59CFF', fontWeight: 700 }}>
+                            Consumo total: {consumoSeleccionado.consumo_total} Wh/día
+                        </Typography>
+                        <Typography variant="body2" sx={{ color: '#ffe066', fontWeight: 600, mb: 1 }}>
+                            Detalles:
+                        </Typography>
+                        {Array.isArray(consumoSeleccionado.detalles_consumo) && consumoSeleccionado.detalles_consumo.length > 0 ? (
+                            <ul style={{ margin: 0, paddingLeft: 16 }}>
+                                {consumoSeleccionado.detalles_consumo.map((item, idx) => (
+                                    <li key={idx} style={{ color: '#fff', marginBottom: 2 }}>
+                                        <b>{item.appliance}</b>: {item.power}W × {item.hours}h × {item.quantity} = <b>{item.total} Wh/día</b>
+                                    </li>
+                                ))}
+                            </ul>
+                        ) : (
+                            <Typography variant="body2" sx={{ color: '#fff8' }}>No hay detalles.</Typography>
+                        )}
+                        {/* Mostrar suma total de Wh del cálculo */}
+
+                        <Typography variant="body2" sx={{ color: '#ffe066', fontWeight: 700, mt: 1 }}>
+                            Total Wh/h: {Array.isArray(consumoSeleccionado.detalles_consumo)
+                                ? consumoSeleccionado.detalles_consumo.reduce((acc, item) => acc + (item.perHour || 0), 0)
+                                : 0}
+                        </Typography>
+                    </Box>
+                )}
+            </Box>
             <Box sx={{ display: 'flex', gap: 4, flexWrap: 'wrap', justifyContent: 'center' }}>
                 {MODULOS.map((modulo, idx) => {
                     // Si hay selección, usar la imagen y el precio del candidato seleccionado
@@ -160,7 +221,7 @@ export default function DisenadorFotovoltaico() {
                 Total: ${total.toLocaleString()}
             </Typography>
             {/* GuardarDisenoSolar permite guardar el diseño solar y asociarlo a un cliente */}
-            <GuardarDisenoSolar diseno={selecciones} total={total} />
+            <GuardarDisenoSolar diseno={{ ...selecciones, cantidadPaneles }} total={total} />
             <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
                 {moduloSeleccionado !== null && MODULOS[moduloSeleccionado].candidatos.map((candidato) => (
                     <MenuItem key={candidato.nombre} onClick={() => handleSelect(candidato.nombre)}>
