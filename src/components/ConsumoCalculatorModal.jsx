@@ -6,7 +6,9 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
+
 import WhatsAppIcon from '@mui/icons-material/WhatsApp';
+import GuardarConsumo from './GuardarConsumo';
 
 const style = {
     position: 'absolute',
@@ -167,6 +169,12 @@ export default function ConsumoCalculatorModal({ open, onClose }) {
                     >
                         Compartir por WhatsApp
                     </Button>
+                    {results.length > 0 && (
+                        <div style={{ marginTop: 24 }}>
+                            {/* GuardarConsumo permite guardar los resultados en Supabase */}
+                            <GuardarConsumo consumoTotal={totalConsumo} detallesConsumo={results} />
+                        </div>
+                    )}
                 </Box>
             </Box>
         </Modal>
