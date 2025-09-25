@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import GuardarDisenoSolar from './GuardarDisenoSolar';
 import TextField from '@mui/material/TextField';
 import IconButton from '@mui/material/IconButton';
 import AddIcon from '@mui/icons-material/Add';
@@ -158,6 +159,8 @@ export default function DisenadorFotovoltaico() {
             <Typography variant="h5" sx={{ mt: 4, color: '#ffe066', fontWeight: 800, textAlign: 'center' }}>
                 Total: ${total.toLocaleString()}
             </Typography>
+            {/* GuardarDisenoSolar permite guardar el diseño solar y asociarlo a un cliente */}
+            <GuardarDisenoSolar diseno={selecciones} total={total} />
             <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
                 {moduloSeleccionado !== null && MODULOS[moduloSeleccionado].candidatos.map((candidato) => (
                     <MenuItem key={candidato.nombre} onClick={() => handleSelect(candidato.nombre)}>
