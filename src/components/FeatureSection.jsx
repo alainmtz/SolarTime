@@ -81,9 +81,11 @@ export default function FeatureSection() {
                                 ? () => navigate('/disenador')
                                 : i === 1
                                     ? () => navigate('/clientes')
-                                    : undefined
+                                    : i === 2
+                                        ? () => navigate('/tienda')
+                                        : undefined
                         }
-                        clickable={i === 0 || i === 1}
+                        clickable={i === 0 || i === 1 || i === 2}
                     />
                 ))}
             </Box>

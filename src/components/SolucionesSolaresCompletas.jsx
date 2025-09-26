@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import SolarSVG from './SolarSVG';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
+import ConsumoCalculatorModal from './ConsumoCalculatorModal';
 
 function SolucionesCard({ image, icon, description, useSVG, onClick }) {
     return (
@@ -46,6 +47,7 @@ function SolucionesCard({ image, icon, description, useSVG, onClick }) {
 
 export default function SolucionesSolaresCompletas() {
     const navigate = useNavigate();
+    const [openConsumoModal, setOpenConsumoModal] = useState(false);
     return (
         <Box id="solucionesSolaresCompletas" sx={{
             py: 12,
@@ -94,7 +96,9 @@ export default function SolucionesSolaresCompletas() {
                         image="/electrodomesticos.jpg"
                         icon="https://assets-v2.codedesign.ai/storage/v1/object/public/68cb0218d968205df284e7c2_e9e4b65d/asset-48f58283"
                         description="El formulario de consumo eléctrico lo ayuda a estimar con precisión el uso de energía de su hogar al ingresar detalles sobre sus electrodomésticos, lo que proporciona una imagen clara para la planificación del sistema solar."
+                        onClick={() => setOpenConsumoModal(true)}
                     />
+                    <ConsumoCalculatorModal open={openConsumoModal} onClose={() => setOpenConsumoModal(false)} />
                 </Box>
             </Box>
         </Box>
