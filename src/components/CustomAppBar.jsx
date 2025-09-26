@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -9,10 +10,12 @@ import WhatsAppIcon from '@mui/icons-material/WhatsApp';
 import EmailIcon from '@mui/icons-material/Email';
 
 export default function CustomAppBar() {
+    const navigate = useNavigate();
+    const goHome = () => navigate('/');
     return (
         <AppBar position="fixed" color="transparent" sx={{ zIndex: 1201 }}>
             <Toolbar sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <Box sx={{ display: 'flex', alignItems: 'center', mr: 2 }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', mr: 2, cursor: 'pointer' }} onClick={goHome}>
                     <img src="/icon.jpg" alt="logo" style={{ width: 50, height: 50, borderRadius: 8, marginRight: 12 }} />
                     <Typography
                         variant="h6"

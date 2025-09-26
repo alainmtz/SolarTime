@@ -1,9 +1,10 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import SolarSVG from './SolarSVG';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
-function SolucionesCard({ image, icon, description, useSVG }) {
+function SolucionesCard({ image, icon, description, useSVG, onClick }) {
     return (
         <Box
             sx={{
@@ -18,7 +19,11 @@ function SolucionesCard({ image, icon, description, useSVG }) {
                 overflow: 'hidden',
                 m: { xs: '0 0 24px 0', md: 1 },
                 boxShadow: 0,
+                cursor: onClick ? 'pointer' : 'default',
+                transition: 'box-shadow 0.2s',
+                '&:hover': onClick ? { boxShadow: 6, borderColor: '#E59CFF' } : {},
             }}
+            onClick={onClick}
         >
             <Box sx={{ width: '100%', height: 230, position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', bgcolor: '#000' }}>
                 {useSVG ? (
@@ -40,6 +45,7 @@ function SolucionesCard({ image, icon, description, useSVG }) {
 }
 
 export default function SolucionesSolaresCompletas() {
+    const navigate = useNavigate();
     return (
         <Box id="solucionesSolaresCompletas" sx={{
             py: 12,
@@ -82,6 +88,7 @@ export default function SolucionesSolaresCompletas() {
                         useSVG
                         icon="https://assets-v2.codedesign.ai/storage/v1/object/public/68cb0218d968205df284e7c2_e9e4b65d/asset-36ce3f25"
                         description="Nuestro diseñador de sistemas solares en línea le permite visualizar y personalizar su configuración solar, asegurándose de que cumpla perfectamente con los requisitos energéticos y las preferencias estéticas únicas de su hogar."
+                        onClick={() => navigate('/trabajos-hechos')}
                     />
                     <SolucionesCard
                         image="/electrodomesticos.jpg"
