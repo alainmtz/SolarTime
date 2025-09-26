@@ -2,7 +2,7 @@ export default function SolarSVG() {
     return (
         <svg viewBox="0 0 900 768" width="100%" height="100%">
             {/* Imagen base */}
-            <image href="/solar-system.jpg" width="900" height="768" />
+            <image href="https://fullsolar.vercel.app/solar-system.jpg" width="900" height="768" />
 
             {/* battery - línea discontinua animada */}
             <line
