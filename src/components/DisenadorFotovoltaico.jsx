@@ -42,7 +42,6 @@ export default function DisenadorFotovoltaico() {
         }
         fetchProductos();
     }, []);
-    // Cable solar: ya no se usa input independiente, solo desde protecciones
 
     // Cargar consumos guardados
     useEffect(() => {
