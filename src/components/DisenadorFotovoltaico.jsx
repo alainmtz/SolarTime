@@ -30,6 +30,18 @@ export default function DisenadorFotovoltaico() {
     const [proteccionSeleccionada, setProteccionSeleccionada] = useState(null);
     const [cantidadProteccion, setCantidadProteccion] = useState(1);
     const [metrosCableProteccion, setMetrosCableProteccion] = useState(1);
+    const [productos, setProductos] = useState([]);
+    const [loadingProductos, setLoadingProductos] = useState(true);
+
+    // Cargar productos con stock
+    useEffect(() => {
+        async function fetchProductos() {
+            const { data } = await supabase.from('productos').select('*');
+            setProductos(data || []);
+            setLoadingProductos(false);
+        }
+        fetchProductos();
+    }, []);
     // Cable solar: ya no se usa input independiente, solo desde protecciones
 
     // Cargar consumos guardados
@@ -142,17 +154,21 @@ export default function DisenadorFotovoltaico() {
                     {/* Lista de protecciones añadidas */}
                     {protecciones.length > 0 && (
                         <Box sx={{ mb: 2 }}>
-                            {protecciones.map((p, i) => (
-                                <Box key={i} sx={{ display: 'flex', gap: 1, alignItems: 'center', mb: 1, bgcolor: '#23234a', borderRadius: 2, p: 1 }}>
-                                    <Typography sx={{ color: '#E59CFF', fontWeight: 600 }}>{p.nombre}</Typography>
-                                    <Typography sx={{ color: '#fff', fontSize: 13 }}>({p.tipo})</Typography>
-                                    <Typography sx={{ color: '#ffe066', fontSize: 13 }}>x{p.cantidad}</Typography>
-                                    <Typography sx={{ color: '#fff', fontSize: 13 }}>Precio: ${p.precio * p.cantidad}</Typography>
-                                    <IconButton size="small" onClick={() => setProtecciones(protecciones.filter((_, j) => j !== i))}>
-                                        <span style={{ color: '#ff6666', fontWeight: 700 }}>✕</span>
-                                    </IconButton>
-                                </Box>
-                            ))}
+                            {protecciones.map((p, i) => {
+                                const prod = productos.find(prod => prod.nombre === p.nombre);
+                                return (
+                                    <Box key={i} sx={{ display: 'flex', gap: 1, alignItems: 'center', mb: 1, bgcolor: '#23234a', borderRadius: 2, p: 1 }}>
+                                        <Typography sx={{ color: '#E59CFF', fontWeight: 600 }}>{p.nombre}</Typography>
+                                        <Typography sx={{ color: '#fff', fontSize: 13 }}>({p.tipo})</Typography>
+                                        <Typography sx={{ color: '#ffe066', fontSize: 13 }}>x{p.cantidad}</Typography>
+                                        <Typography sx={{ color: '#fff', fontSize: 13 }}>Precio: ${p.precio * p.cantidad}</Typography>
+                                        <Typography sx={{ color: '#4caf50', fontSize: 13 }}>Stock: {prod?.stock ?? 0}</Typography>
+                                        <IconButton size="small" onClick={() => setProtecciones(protecciones.filter((_, j) => j !== i))}>
+                                            <span style={{ color: '#ff6666', fontWeight: 700 }}>✕</span>
+                                        </IconButton>
+                                    </Box>
+                                );
+                            })}
                         </Box>
                     )}
                     {/* Botón para añadir protección/aditamento */}
@@ -164,17 +180,24 @@ export default function DisenadorFotovoltaico() {
                         <Typography variant="body2" sx={{ color: '#E59CFF' }}>Añadir protección/aditamento</Typography>
                     </Box>
                     <Menu anchorEl={proteccionMenuAnchor} open={Boolean(proteccionMenuAnchor)} onClose={() => { setProteccionMenuAnchor(null); setProteccionSeleccionada(null); setCantidadProteccion(1); setMetrosCableProteccion(1); }}>
-                        {PROTECCIONES_OPCIONES.map((op, idx) => (
-                            <MenuItem key={op.nombre} onClick={() => {
-                                setProteccionSeleccionada(op);
-                                setProteccionMenuAnchor(null);
-                            }}>
-                                <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                                    <span style={{ fontWeight: 600 }}>{op.nombre}</span>
-                                    <span style={{ fontSize: 12, color: '#888' }}>{op.tipo} - ${op.precio}</span>
-                                </Box>
-                            </MenuItem>
-                        ))}
+                        {PROTECCIONES_OPCIONES.filter(op => {
+                            const prod = productos.find(p => p.nombre === op.nombre && (p.stock ?? 0) > 0);
+                            return !!prod;
+                        }).map(op => {
+                            const prod = productos.find(p => p.nombre === op.nombre && (p.stock ?? 0) > 0);
+                            return (
+                                <MenuItem key={op.nombre} onClick={() => {
+                                    setProteccionSeleccionada(op);
+                                    setProteccionMenuAnchor(null);
+                                }}>
+                                    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                                        <span style={{ fontWeight: 600 }}>{op.nombre}</span>
+                                        <span style={{ fontSize: 12, color: '#888' }}>{op.tipo} - ${op.precio}</span>
+                                        <span style={{ fontSize: 12, color: '#4caf50' }}>Stock: {prod?.stock ?? 0}</span>
+                                    </Box>
+                                </MenuItem>
+                            );
+                        })}
                     </Menu>
                     {/* Si hay una protección seleccionada, mostrar input de cantidad o metros y botón de confirmar */}
                     {proteccionSeleccionada && (

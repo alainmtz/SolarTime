@@ -8,6 +8,7 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Button from '@mui/material/Button';
+import Chip from '@mui/material/Chip';
 
 export default function TiendaPage() {
     const [productos, setProductos] = useState([]);
@@ -61,20 +62,30 @@ export default function TiendaPage() {
 
     // Filtrado por categoría y búsqueda
     let productosFiltrados = productos.filter(p => (p.stock ?? 0) > 0);
-    if (categoria) {
-        if (categoria === 'Protecciones') {
-            productosFiltrados = productosFiltrados.filter(p => PROTECCIONES_OPCIONES.some(opt => opt.nombre === p.nombre));
-        } else {
-            // Buscar por candidatos de la categoría seleccionada
-            const mod = MODULOS.find(m => m.nombre === categoria);
-            if (mod) {
-                const nombres = mod.candidatos.map(c => c.nombre);
-                productosFiltrados = productosFiltrados.filter(p => nombres.includes(p.nombre));
-            }
+    // Si la categoría es Protecciones, agrupar por tipo de protección y mostrar productos con stock
+    let proteccionesConStock = [];
+    if (categoria === 'Protecciones') {
+        // Agrupar por tipo de protección
+        const proteccionesAgrupadas = PROTECCIONES_OPCIONES.map(opt => {
+            const productosRelacionados = productosFiltrados.filter(p => p.nombre === opt.nombre);
+            return {
+                ...opt,
+                productosRelacionados
+            };
+        }).filter(opt => opt.productosRelacionados.length > 0);
+        proteccionesConStock = proteccionesAgrupadas;
+        productosFiltrados = [];
+    } else if (categoria) {
+        // Buscar por candidatos de la categoría seleccionada
+        const mod = MODULOS.find(m => m.nombre === categoria);
+        if (mod) {
+            const nombres = mod.candidatos.map(c => c.nombre);
+            productosFiltrados = productosFiltrados.filter(p => nombres.includes(p.nombre));
         }
     }
     if (busqueda) {
         productosFiltrados = productosFiltrados.filter(p => p.nombre.toLowerCase().includes(busqueda.toLowerCase()));
+        proteccionesConStock = proteccionesConStock.filter(opt => opt.nombre.toLowerCase().includes(busqueda.toLowerCase()));
     }
 
     // Total carrito
@@ -210,6 +221,47 @@ export default function TiendaPage() {
             </Box>
             {loading ? (
                 <Typography>Cargando productos...</Typography>
+            ) : categoria === 'Protecciones' ? (
+                proteccionesConStock.length === 0 ? (
+                    <Typography>No hay protecciones con stock.</Typography>
+                ) : (
+                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 3 }}>
+                        {proteccionesConStock.map(opt => (
+                            <Card key={opt.nombre} sx={{ width: 320, bgcolor: '#181828', color: '#fff', borderRadius: 3, boxShadow: 3 }}>
+                                {opt.productosRelacionados[0]?.imagen && (
+                                    <CardMedia
+                                        component="img"
+                                        height="180"
+                                        image={opt.productosRelacionados[0].imagen}
+                                        alt={opt.nombre}
+                                        sx={{ objectFit: 'contain', bgcolor: '#23234a' }}
+                                    />
+                                )}
+                                <CardContent>
+                                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
+                                        <Typography variant="h6" sx={{ color: '#ffe066', fontWeight: 700 }}>{opt.nombre}</Typography>
+                                        <Chip label={`Stock: ${opt.productosRelacionados.reduce((acc, p) => acc + (p.stock ?? 0), 0)}`} color="primary" size="small" sx={{ bgcolor: '#ffe066', color: '#23234a', fontWeight: 700 }} />
+                                    </Box>
+                                    <Typography variant="body2" sx={{ color: '#E59CFF', mb: 1 }}>{opt.tipo}</Typography>
+                                    <Typography variant="body2" sx={{ color: '#fff', mb: 1 }}>Precio base: ${opt.precio}</Typography>
+                                    <Typography variant="subtitle2" sx={{ color: '#4caf50', fontWeight: 700, mb: 1 }}>Productos con stock:</Typography>
+                                    <ul style={{ margin: 0, paddingLeft: 18 }}>
+                                        {opt.productosRelacionados.map(prod => (
+                                            <li key={prod.id} style={{ marginBottom: 2, display: 'flex', alignItems: 'center', gap: 8 }}>
+                                                <span style={{ fontWeight: 700 }}>{prod.nombre}</span>
+                                                <Chip label={`Stock: ${prod.stock}`} color="primary" size="small" sx={{ bgcolor: '#ffe066', color: '#23234a', fontWeight: 700 }} />
+                                                <span>— ${prod.precio}</span>
+                                                <Button size="small" variant="contained" color="secondary" sx={{ ml: 2, fontWeight: 700 }} onClick={() => agregarAlCarrito(prod)}>
+                                                    Añadir al carrito
+                                                </Button>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </CardContent>
+                            </Card>
+                        ))}
+                    </Box>
+                )
             ) : productosFiltrados.length === 0 ? (
                 <Typography>No hay productos disponibles.</Typography>
             ) : (
@@ -226,9 +278,12 @@ export default function TiendaPage() {
                                 />
                             )}
                             <CardContent>
-                                <Typography variant="h6" sx={{ color: '#ffe066', fontWeight: 700 }}>
-                                    {producto.nombre}
-                                </Typography>
+                                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
+                                    <Typography variant="h6" sx={{ color: '#ffe066', fontWeight: 700 }}>
+                                        {producto.nombre}
+                                    </Typography>
+                                    <Chip label={`Stock: ${producto.stock}`} color="primary" size="small" sx={{ bgcolor: '#ffe066', color: '#23234a', fontWeight: 700 }} />
+                                </Box>
                                 <Typography variant="body2" sx={{ color: '#E59CFF', mb: 1 }}>
                                     {producto.descripcion}
                                 </Typography>

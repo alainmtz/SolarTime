@@ -11,4 +11,6 @@ export const PROTECCIONES_OPCIONES = [
     { nombre: 'Pararrayos', tipo: 'Pararrayos', precio: 300, producto_id: null },
     { nombre: 'Aterramiento', tipo: 'Tierra', precio: 300, producto_id: null },
     { nombre: 'Cable solar m', tipo: 'Cable', precio: 8, producto_id: null },
+    { nombre: 'Caja de Proteccion AC', tipo: 'Caja', precio: 110, producto_id: null },
+    { nombre: 'Proteccion DC', tipo: 'Caja', precio: 110, producto_id: null },
 ];
